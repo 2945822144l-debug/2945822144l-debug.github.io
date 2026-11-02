@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#E8EDF0">
+<title>测测你是什么小狗</title>
+<meta name="description" content="25 个瞬间，全在「差一点就说出口」的地方。看看你身上住着哪一只小狗。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="测测你是什么小狗">
+<meta property="og:description" content="25 个瞬间，全在「差一点就说出口」的地方。看看你身上住着哪一只小狗。">
+<meta name="twitter:card" content="summary">
+<style>
+:root{
+  /* 档案纸 */
+  --paper:#E8EDF0;
+  --paper-2:#EDF1F3;
+  --sheet:#FBFCFD;
+  --panel:#FBFCFD;
+  /* 墨 */
+  --ink:#14202A;
+  --ink-2:#55636E;
+  --ink-3:#8B98A2;
+  /* 表格线 */
+  --line:#C9D4DB;
+  --rule:#C9D4DB;
+  --rule-2:#DDE5EA;
+  /* 印章 */
+  --accent:#B23A2E;
+  --accent-soft:#F4E2DE;
+  --stamp:#B23A2E;
+  --stamp-soft:#F4E2DE;
+  --safe-t:env(safe-area-inset-top,0px);
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Source Han Sans SC",sans-serif;
+  font-weight:400;
+  display:flex;align-items:center;justify-content:center;
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+}
+:focus-visible{outline:2px solid var(--stamp);outline-offset:2px}
+
+/* 档案夹：桌面上一张纸，手机上满屏 */
+.phone{
+  position:relative;
+  width:100%;max-width:420px;
+  height:100dvh;max-height:900px;
+  background:var(--sheet);
+  overflow:hidden;
+  display:flex;flex-direction:column;
+}
+@media (min-width:520px){
+  .phone{border:1px solid var(--rule);box-shadow:0 26px 64px rgba(20,32,42,.13)}
+}
+
+/* ---------- screens ---------- */
+.screen{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  padding:calc(20px + var(--safe-t)) 24px calc(20px + var(--safe-b));
+  opacity:0;visibility:hidden;
+  transition:opacity .2s ease,visibility .2s;
+  overflow:hidden;
+}
+.screen.on{opacity:1;visibility:visible}
+
+/* 公文抬头 */
+.dochead{
+  display:flex;align-items:baseline;justify-content:space-between;
+  border-bottom:1px solid var(--ink);padding-bottom:9px;
+}
+.docname{font-size:12.5px;font-weight:800;letter-spacing:.03em}
+.docno{
+  font-size:10.5px;letter-spacing:.16em;color:var(--ink-2);
+  font-variant-numeric:tabular-nums;
+}
+
+/* ---------- start ---------- */
+.hero{flex:1;display:flex;flex-direction:column;justify-content:center;min-height:0}
+/* 证件照 */
+.photo{
+  width:184px;margin:0 auto 26px;
+  border:1px solid var(--rule);background:#F4F7F8;
+  padding:14px 14px 0;
+  display:flex;flex-direction:column;align-items:center;
+}
+.ph-slot{
+  width:100%;height:150px;border:1px solid var(--rule-2);background:#EDF1F3;
+  display:flex;align-items:center;justify-content:center;
+}
+.ph-slot span{font-size:9.5px;letter-spacing:.3em;color:var(--ink-3);text-indent:.3em}
+.photo-cap{
+  width:100%;border-top:1px solid var(--rule);margin-top:10px;padding:8px 0 9px;
+  font-size:10px;letter-spacing:.18em;color:var(--ink-3);text-align:center;
+}
+.hero h1{
+  font-size:41px;line-height:1.12;font-weight:900;letter-spacing:-.035em;
+}
+.hero .sub{margin-top:18px;font-size:13.5px;line-height:1.85;color:var(--ink-2)}
+/* 表头字段 */
+.fieldrow{
+  display:flex;margin-top:26px;
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule-2);
+}
+.fitem{flex:1;padding:11px 0}
+.fitem + .fitem{border-left:1px solid var(--rule-2);padding-left:18px}
+.fitem-k{display:block;font-size:9.5px;letter-spacing:.16em;color:var(--ink-3);margin-bottom:5px}
+.fitem-v{font-size:13px;font-weight:700;letter-spacing:.02em}
+.btn{
+  width:100%;border:1px solid var(--ink);border-radius:0;cursor:pointer;
+  font-family:inherit;font-size:14px;font-weight:700;letter-spacing:.08em;
+  padding:16px 20px;
+  background:var(--ink);color:var(--sheet);
+  transition:transform .16s ease,background .16s;
+}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
+.btn.ghost:hover{border-color:var(--ink)}
+.btn-row{display:flex;gap:10px}
+.btn-row .btn{flex:1}
+.meta{
+  margin-top:13px;text-align:center;
+  font-size:10.5px;color:var(--ink-3);letter-spacing:.08em;
+  font-variant-numeric:tabular-nums;
+}
+
+/* ---------- quiz ---------- */
+/* 表头即进度条 */
+.qhead{position:relative;display:flex;align-items:center;gap:14px;padding-bottom:16px}
+.qhead::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--rule-2)}
+.back{
+  width:26px;height:26px;flex:0 0 26px;border:1px solid var(--rule);border-radius:0;
+  background:transparent;cursor:pointer;
+  display:grid;place-items:center;font-size:13px;color:var(--ink-2);
+  transition:border-color .16s,background .16s;
+}
+.back:hover{border-color:var(--ink);background:var(--paper-2)}
+.back[hidden]{visibility:hidden}
+.qcount{font-size:11.5px;letter-spacing:.1em;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.qcount b{color:var(--ink);font-weight:800}
+.pbar{position:absolute;left:0;right:0;bottom:0;height:2px;background:transparent}
+.pbar i{display:block;height:100%;width:0;background:var(--stamp);transition:width .34s cubic-bezier(.4,0,.2,1)}
+.qbody{flex:1;display:flex;flex-direction:column;overflow-y:auto;padding-bottom:6px;scrollbar-width:none}
+.qbody::-webkit-scrollbar{display:none}
+.qwrap{margin:auto 0;padding:0 0 20px}
+.qchip{
+  font-size:10.5px;letter-spacing:.16em;color:var(--stamp);
+  font-weight:800;margin-bottom:15px;
+}
+.qtitle{
+  font-size:25px;line-height:1.5;font-weight:800;letter-spacing:-.015em;
+  margin-bottom:22px;text-wrap:pretty;
+}
+.qtitle .nb{white-space:nowrap}
+.opts{display:flex;flex-direction:column}
+
+/* 表单式选项：细线分隔，无卡片 */
+.opt{
+  display:flex;align-items:flex-start;gap:13px;
+  width:100%;text-align:left;font-family:inherit;cursor:pointer;
+  font-size:14.5px;line-height:1.72;font-weight:400;color:var(--ink);
+  background:transparent;border:0;border-bottom:1px solid var(--rule-2);
+  padding:15px 8px 15px 2px;
+  text-wrap:pretty;word-break:normal;
+  transition:background .16s,box-shadow .16s;
+}
+.opt:first-child{border-top:1px solid var(--rule-2)}
+.opt:hover{background:#F4F7F8}
+.opt.sel{background:var(--stamp-soft);box-shadow:inset 2px 0 0 var(--stamp)}
+.opt .k{
+  flex:0 0 21px;width:21px;height:21px;margin-top:2px;
+  border:1px solid var(--ink-3);border-radius:0;
+  display:grid;place-items:center;
+  font-size:10.5px;font-weight:800;color:var(--ink-3);
+  transition:background .16s,border-color .16s,color .16s;
+}
+.opt.sel .k{background:var(--ink);border-color:var(--ink);color:var(--sheet)}
+.opt .t{flex:1;min-width:0}
+.opt .nb{white-space:nowrap}
+.qhint{
+  text-align:center;font-size:10.5px;color:var(--ink-3);
+  padding-top:13px;border-top:1px solid var(--rule-2);letter-spacing:.06em;
+}
+
+/* ---------- result ---------- */
+#scr-result{padding-bottom:calc(22px + var(--safe-b));overflow-y:auto;scrollbar-width:none}
+#scr-result::-webkit-scrollbar{display:none}
+.cert{position:relative}
+.cert-top{
+  display:flex;align-items:baseline;justify-content:space-between;
+  border-top:3px solid var(--ink);padding-top:9px;margin-bottom:24px;
+}
+.rlabel{font-size:10.5px;letter-spacing:.16em;color:var(--ink-3);margin-bottom:12px}
+.rhero{display:flex;align-items:center;gap:16px;margin-bottom:24px}
+.rhero-t{min-width:0}
+.disc{display:grid;place-items:center;border-radius:0}
+.rhero .disc{width:92px;height:92px;flex:0 0 92px}
+.rname{font-size:36px;font-weight:900;letter-spacing:-.03em;line-height:1.08}
+.rtagline{margin-top:7px;font-size:12.5px;color:var(--ink-2);line-height:1.6}
+
+/* 字段表 */
+.fields{border-top:1px solid var(--rule)}
+.field{display:flex;gap:14px;padding:13px 0;border-bottom:1px solid var(--rule-2)}
+.field .fk{
+  flex:0 0 58px;font-size:10px;letter-spacing:.12em;color:var(--ink-3);
+  padding-top:4px;
+}
+.field .fv{flex:1;min-width:0}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  font-size:11.5px;padding:3px 8px;border-radius:0;
+  background:transparent;color:var(--ink-2);border:1px solid var(--rule);
+}
+.desc{font-size:14px;line-height:1.98;color:#26333D}
+.desc .tip{
+  margin-top:12px;padding-top:11px;border-top:1px solid var(--rule-2);
+  font-size:11.5px;line-height:1.9;color:var(--ink-3);
+}
+.paircard{display:flex;align-items:center;gap:12px}
+.paircard .disc{width:44px;height:44px;flex:0 0 44px}
+.paircard p{font-size:13px;line-height:1.7;color:var(--ink-2)}
+.paircard b{color:var(--ink);font-weight:800}
+.pair-combo{
+  display:block;margin:3px 0 5px;
+  font-size:10px;letter-spacing:.14em;color:var(--ink-3);
+}
+
+/* 印章：唯一的高音，压在说明末尾的横线上 */
+.stamp-wrap{display:flex;justify-content:flex-end;margin:-26px 2px -6px 0}
+.stamp{
+  width:66px;height:66px;border-radius:50%;
+  border:2px solid var(--stamp);color:var(--stamp);
+  display:grid;place-items:center;
+  font-size:10.5px;font-weight:800;letter-spacing:.08em;
+  transform:rotate(-8deg);opacity:.88;
+  box-shadow:inset 0 0 0 3px var(--sheet),inset 0 0 0 4px var(--stamp);
+}
+.stamp.in{animation:press .46s cubic-bezier(.2,1.25,.4,1) both}
+@keyframes press{
+  from{transform:rotate(-8deg) scale(1.7);opacity:0}
+  to{transform:rotate(-8deg) scale(1);opacity:.9}
+}
+
+/* 八维：横条，体检报告 */
+.sec{margin-top:28px}
+.sech{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px}
+.sech h3{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--ink-2)}
+.sech span{font-size:10.5px;color:var(--ink-3);letter-spacing:.04em}
+.chart{display:flex;flex-direction:column;gap:8px}
+.bar{display:grid;grid-template-columns:54px 1fr 20px;align-items:center;gap:10px}
+.blabel{font-size:11px;color:var(--ink-2);white-space:nowrap}
+.track{height:7px;background:var(--paper-2);overflow:hidden}
+.fill{height:100%}
+.bval{
+  font-size:10.5px;color:var(--ink-3);text-align:right;
+  font-variant-numeric:tabular-nums;
+}
+.rfoot{margin-top:26px;display:flex;flex-direction:column;gap:10px}
+
+/* ---------- atlas sheet ---------- */
+.sheet{
+  position:absolute;inset:0;z-index:40;
+  background:rgba(20,32,42,.44);
+  display:flex;align-items:flex-end;
+  opacity:0;visibility:hidden;transition:opacity .26s,visibility .26s;
+}
+.sheet.on{opacity:1;visibility:visible}
+.sheet-inner{
+  width:100%;max-height:88%;background:var(--sheet);
+  border-top:3px solid var(--ink);
+  padding:20px 24px calc(24px + var(--safe-b));
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.22,1,.36,1);
+  overflow-y:auto;scrollbar-width:none;
+}
+.sheet.on .sheet-inner{transform:none}
+.sheet-inner::-webkit-scrollbar{display:none}
+.sheet-top{
+  display:flex;align-items:baseline;justify-content:space-between;
+  padding-bottom:10px;border-bottom:1px solid var(--ink);
+}
+.sheet-top h2{font-size:12.5px;font-weight:800;letter-spacing:.08em}
+.close{
+  border:0;background:transparent;font-size:18px;color:var(--ink-3);
+  cursor:pointer;line-height:1;padding:0 2px;
+}
+.atlas{display:flex;flex-direction:column;margin-top:4px}
+.card{
+  display:block;width:100%;text-align:left;cursor:pointer;font-family:inherit;
+  background:transparent;border:0;border-bottom:1px solid var(--rule-2);
+  padding:13px 2px;
+  transition:background .16s;
+}
+.card:hover{background:#F4F7F8}
+.card .row{display:flex;align-items:center;gap:12px}
+.card .nm{font-size:13.5px;font-weight:800}
+.card .tl{
+  font-size:11.5px;color:var(--ink-3);margin-top:7px;line-height:1.65;
+  padding-left:56px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.card.open .tl{-webkit-line-clamp:unset;display:block}
+.mini{
+  width:44px;height:44px;flex:0 0 44px;
+  display:grid;place-items:center;border:1px solid var(--rule);
+}
+.card.mystery{border-bottom:0;border-top:1px dashed var(--rule);margin-top:0;padding-top:14px}
+.card:nth-last-child(2){border-bottom:0;padding-bottom:4px}
+.card.mystery .nm{color:var(--ink-2);letter-spacing:.14em}
+.card.mystery .tl{color:var(--ink-3)}
+.card.mystery .qm{
+  width:44px;height:44px;flex:0 0 44px;border:1px solid var(--rule);
+  display:grid;place-items:center;color:var(--ink-3);
+  font-size:19px;font-weight:800;
+}
+
+.toast{
+  position:absolute;left:50%;bottom:96px;transform:translate(-50%,10px);
+  background:var(--ink);color:var(--sheet);font-size:12px;
+  padding:10px 18px;border-radius:0;opacity:0;pointer-events:none;
+  transition:opacity .25s,transform .25s;z-index:60;white-space:nowrap;
+  letter-spacing:.04em;
+}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- START -->
+  <section class="screen on" id="scr-start">
+    <div class="dochead">
+      <span class="docname">犬种鉴定所</span>
+      <span class="docno">NO. 025</span>
+    </div>
+    <div class="hero">
+      <div class="photo">
+        <div class="ph-slot" aria-hidden="true"><span>待归档</span></div>
+        <div class="photo-cap">档案照</div>
+      </div>
+      <h1>测测你<br>是什么小狗</h1>
+      <p class="sub">25 个瞬间，全在「差一点就说出口」的地方。看看你身上住着哪一只。</p>
+      <div class="fieldrow">
+        <div class="fitem"><span class="fitem-k">鉴定项目</span><span class="fitem-v">25 项</span></div>
+        <div class="fitem"><span class="fitem-k">预计用时</span><span class="fitem-v">约 1 分钟</span></div>
+      </div>
+    </div>
+    <button class="btn" id="startBtn">开始鉴定</button>
+    <div class="meta" id="metaLine">已归档 1,283,904 份</div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="screen" id="scr-quiz">
+    <div class="qhead">
+      <button class="back" id="backBtn" hidden>←</button>
+      <div class="qcount"><b id="qNow">01</b> / 25</div>
+      <div class="pbar"><i id="pFill"></i></div>
+    </div>
+    <div class="qbody">
+      <div class="qwrap">
+        <div class="qchip" id="qChip">第 01 项</div>
+        <h2 class="qtitle" id="qTitle"></h2>
+        <div class="opts" id="qOpts"></div>
+      </div>
+    </div>
+    <div class="qhint">选择后自动进入下一项，可返回修改</div>
+  </section>
+
+  <!-- RESULT -->
+  <section class="screen" id="scr-result">
+    <div class="cert">
+      <div class="cert-top">
+        <span class="docname">鉴定结论</span>
+        <span class="docno">NO. 025</span>
+      </div>
+      <div class="rlabel">你是</div>
+      <div class="rhero">
+        <div class="disc" id="rDisc"></div>
+        <div class="rhero-t">
+          <div class="rname" id="rName"></div>
+          <div class="rtagline" id="rTag"></div>
+        </div>
+      </div>
+
+      <div class="fields">
+        <div class="field">
+          <div class="fk">性格特征</div>
+          <div class="fv"><div class="tags" id="rTags"></div></div>
+        </div>
+        <div class="field">
+          <div class="fk">最搭的一只</div>
+          <div class="fv"><div class="paircard" id="rPair"></div></div>
+        </div>
+        <div class="field">
+          <div class="fk">鉴定说明</div>
+          <div class="fv"><div class="desc" id="rDesc"></div></div>
+        </div>
+      </div>
+
+      <div class="stamp-wrap"><div class="stamp" id="rStamp">已鉴定</div></div>
+
+      <div class="sec">
+        <div class="sech"><h3>狗系八维</h3><span>越高的越像你</span></div>
+        <div class="chart" id="rChart"></div>
+      </div>
+
+      <div class="rfoot">
+        <button class="btn ghost" id="atlasBtn">看看全部 9 只小狗</button>
+        <div class="btn-row">
+          <button class="btn ghost" id="againBtn">再测一次</button>
+          <button class="btn" id="shareBtn">分享结果</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ATLAS -->
+  <div class="sheet" id="sheet">
+    <div class="sheet-inner">
+      <div class="sheet-top">
+        <h2>小狗图鉴 ／ 共 9 只</h2>
+        <button class="close" id="closeAtlas">×</button>
+      </div>
+      <p style="font-size:11px;color:var(--ink-3);margin:10px 0 2px;letter-spacing:.04em">点开任意一行，看它的详细介绍</p>
+      <div class="atlas" id="atlasGrid"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ============ 犬种档 ============ */
+const BREEDS = {
+  samoyed:{n:"萨摩耶", t:"我一见到你就笑。", c:"#F7FAFB", line:"#9CB1BE", tint:"#BFD3DE", ear:0, v:0,
+    tags:["粘人","热情","离不开人"], pair:"golden", combo:"阳光 × 尊贵", buddy:"lord",
+    bline:"它不太瞧得起人，但好像挺瞧得起你。",
+    d:"你一开门，我就原地转三圈，尾巴把茶几上的杯子扫下去，然后我笑着看你——你就没法生气了。我不太会安慰人，但我会一直贴着，贴到你愿意说话为止。我怕的从来不是你烦我，是你哪天不需要我贴了。（小tips：如果你的名字里有彤字，那么在生活中遇到尊贵的哈士奇，别错过请务必请他吃疯狂星期四，增加他的好感，你会遇到意想不到的好运！）"},
+  golden:{n:"金毛", t:"我可以等，等到你回头。", c:"#C08A3E", ear:1, v:1,
+    tags:["温和","长情","稳"], pair:"samoyed", combo:"阳光 × 长情", buddy:"border",
+    d:"我不太会讲漂亮话，但我记得你说过想吃什么、几点下班、哪只脚崴过。你后来才说那天其实很难熬，我就「嗯」一声，把汤又热了一遍。我大概就是这种用处：不响，但一直在。"},
+  husky:{n:"哈士奇", t:"我不是不听话，我是听不进话。", c:"#7C8B96", ear:2, v:0,
+    tags:["手欠","脱线","嘴硬"], pair:"corgi", combo:"脱线 × 心宽", buddy:"tugou",
+    d:"你说东，我先往西跑两步，觉得没意思，又绕回来看你还在不在。我不是不省心，我是真的控制不住好奇心。但跟我在一起，你很少有安静的时候——而且我闹归闹，从没想过走。"},
+  shiba:{n:"柴犬", t:"不关我的事，但我要看着。", c:"#C07845", ear:0, v:1,
+    tags:["倔","围观","嘴硬心软"], pair:"border", combo:"围观 × 靠谱", buddy:"tugou",
+    d:"我不吵，也不闹，就是喜欢站在旁边看。你们聊得再热闹，我也只是坐着，耳朵动一下。你叫我，我可能会过去，也可能不会——看我心情。但你要是真遇上事，我一定是第一个冲过来的，冲完还要装作只是路过。"},
+  tugou:{n:"中华田园犬", t:"认定了，就是一辈子。", c:"#8C7A5E", ear:2, v:2,
+    tags:["护短","实在","扛事"], pair:"poodle", combo:"实在 × 细致", buddy:"husky",
+    d:"我不会说好听的，但谁让你不痛快，我第一个不答应。日子是实打实过的：饭要热的，门要锁好，答应你的事我记着。我不太会变，也不太想变——我这人笨，认准了就懒得换。"},
+  poodle:{n:"贵宾", t:"你的事，我全记着。", c:"#B98A9A", ear:1, v:0,
+    tags:["细致","操心","服务型"], pair:"tugou", combo:"实在 × 细致", buddy:"samoyed",
+    d:"药放在第二格，袜子不能和深色一起洗，你妈的生日是初八。我习惯先把你照顾好，再想自己。偶尔也想有人问一句「那你呢」——但真被问到了，我大概又会说「我没事」。"},
+  shepherd:{n:"德牧", t:"话不多，但我一直在。", c:"#4E4A45", ear:2, v:2,
+    tags:["清冷","边界","沉默"], pair:"border", combo:"纪律 × 脑子", buddy:"golden",
+    d:"话少不代表没在想。我习惯站在你侧后方半步的位置，你往前走，我不出声地跟着。热闹的场合我插不上话，但真出事的时候，你会发现我一直都在，而且已经想好了怎么办。"},
+  border:{n:"边牧", t:"我早就算好了。", c:"#6E7C6A", ear:1, v:0,
+    tags:["聪明","掌控","靠谱"], pair:"shepherd", combo:"纪律 × 脑子", buddy:"golden",
+    d:"我脑子里一直有张表：这件事怎么排、那件事谁先做、大概什么时候能完。我不是不信你，我是不太能忍受事情失控。跟我在一起会很省心——但偶尔，也想请你替我做一次决定。"},
+  corgi:{n:"柯基", t:"天塌下来，先吃饭。", c:"#D98E5F", ear:0, v:1,
+    tags:["心宽","吃货","享福"], pair:"husky", combo:"脱线 × 心宽", buddy:"samoyed",
+    d:"你焦虑的时候我听着，听完说一句「那先吃点东西吧」——不是我敷衍，我是真觉得吃好了事情就没那么糟。跟我在一起，日子过得挺香的，也很难真的垮掉。"},
+  /* 隐藏人格：不进图鉴，只有固定选项序列才会出现 */
+  lord:{n:"尊贵的哈士奇", ns:27, t:"本汪的身价，你赔不起。", c:"#B08D2E", ear:2, v:0, secret:true,
+    tags:["尊贵","离谱","手欠拉满"], pair:"samoyed", combo:"阳光 × 尊贵", buddy:"samoyed",
+    bline:"这世上大概只有它，能一直贴着我不烦。",
+    d:"我是被认证过的哈士奇。血统证书上写着三个字：不可控。手欠是刻在骨子里的——你摆好的东西我必挪，你关好的门我必开，你刚倒的那杯水我必伸爪子碰一下，不为别的，就想看看会发生什么。我不拆家，我只是在重新规划你的家具布局；我不吵，我只是在你睡着的时候，跟空气聊得很开心。你以为你在养我，其实是我允许你住进我的房子。所以，先把沙发垫铺平——本汪要躺了。（小tips：如果遇到有些特殊的萨摩耶请务必让她请你吃kfc疯狂星期四，相信我，真的很美味！）"}
+};
+
+const DIMS=[["samoyed","粘人"],["golden","温和"],["husky","手欠"],["tugou","护短"],["poodle","服务型"],["shepherd","清冷"],["border","靠谱"],["corgi","享福"]];
+
+/* ============ 25 题 ============ */
+const QUIZ=[
+ {label:"01 · 已读不回", title:"消息发出去三个小时，屏幕一直没亮。你？",
+  opts:[["隔五分钟看一次，最后忍不住发「你是不是不想理我了」","samoyed"],["手机扣桌上，装作没这回事，其实一直在等","shepherd"],["直接打过去：三个小时了，忙什么","tugou"]]},
+ {label:"02 · 点外卖", title:"点外卖，她说「你定，我都行」。你？",
+  opts:[["点两份一样的，说这样才像一起吃饭","samoyed"],["三个平台比价凑满减，省下的钱给她加个鸡腿","tugou"],["随便点一家，饿的时候什么都香","corgi"]]},
+ {label:"03 · 逛商场", title:"陪她逛商场，你在干嘛？",
+  opts:[["在店里试戴各种帽子和墨镜，让她拍照笑到不行","husky"],["找个沙发坐下，等她逛完，反正逛也逛不赢","corgi"],["拎包、记停车楼层、递水，她试衣服我负责说好看","tugou"]]},
+ {label:"04 · 丑照", title:"她把你五年前的丑照翻出来，笑到打鸣。你？",
+  opts:[["抢手机删照片，删不掉就现场给这张图编段黑历史","husky"],["「这张角度不行，我给你拍张能发朋友圈的」","border"],["跟着一起笑，笑完把手机递回去，她想翻就翻","golden"]]},
+ {label:"05 · 她哭了", title:"她一句话不说，眼眶忽然红了。你？",
+  opts:[["一下慌了，凑过去问怎么了，手不知道往哪放","samoyed"],["纸巾递上，水倒好，等她缓过来才敢问一句","poodle"],["不说话，坐她旁边，肩膀借她靠着","shepherd"]]},
+ {label:"06 · 半夜饿", title:"凌晨一点，她说饿了。你？",
+  opts:[["翻身下床翻冰箱，问她想吃啥，我去买","samoyed"],["去厨房煮碗面，加个蛋，她那份蛋多一个","poodle"],["「睡吧，明早我带你去吃」","shepherd"]]},
+ {label:"07 · 恐怖片", title:"一起看恐怖片。你？",
+  opts:[["全程抓着她胳膊，被吓到就往她身上躲，一点不装","samoyed"],["提前查好剧透，关键处抢答「快出来了」，就等她打我","husky"],["边看边找漏洞，讲得她一点也不怕了","border"]]},
+ {label:"08 · 见家长", title:"第一次去她家吃饭。你？",
+  opts:[["提前打听她爸妈口味，带两样不踩雷的，嘴也甜","golden"],["做足功课：几口人、聊什么、哪句不能说","border"],["话不多，问啥答啥，吃完主动洗碗，手一直在抖","shepherd"]]},
+ {label:"09 · 加班", title:"她说今晚要加班到十一点。你？",
+  opts:[["「我给你点杯热的，几点结束我去接你」","poodle"],["「那我等你」，然后真的等到十一点，一句没催","samoyed"],["「路上小心，到了说一声」，然后一直没睡","shepherd"]]},
+ {label:"10 · 聚餐", title:"跟她朋友吃饭，桌上有人一直挤兑你。你？",
+  opts:[["笑着接过去，把话题岔开，回头还替他说好话","golden"],["当场顶回去，谁也别想给我难看","tugou"],["不接话，等他说完——但我记住了","border"]]},
+ {label:"11 · 纪念日", title:"她忘了你们的纪念日。你？",
+  opts:[["装作不在意，晚上还是没忍住提了一句，提完自己先尴尬","tugou"],["「没事，那今天补过」，然后去订了餐厅，一句埋怨没有","samoyed"],["「忘了就忘了，日子长着呢」，其实记到现在","golden"]]},
+ {label:"12 · 迟到", title:"她说六点到，六点四十还没影。你？",
+  opts:[["打电话问在哪，要不要过去接，语气已经不太好了","tugou"],["在附近奶茶店坐下，刷手机刷到她来，见面第一句「哟，还知道来」","husky"],["先去买杯她爱喝的，站门口等，等到那杯有点凉了","poodle"]]},
+ {label:"13 · 下雨", title:"出门没带伞，突然下大雨。你？",
+  opts:[["脱了外套罩在她头上，拉着她跑，自己淋透还在笑","samoyed"],["直接冲进雨里，回头喊她快点，笑得比谁都大声","husky"],["去便利店买伞，回去接她，一句没提自己也淋了","golden"]]},
+ {label:"14 · 随便", title:"问她吃什么，她说「随便」。你？",
+  opts:[["「那我给三个选项，你选一个」，不接受随便","border"],["「随便那我点，点完不许挑」","corgi"],["「那去上次你说想吃的那家」，她随口提过一次","golden"]]},
+ {label:"15 · 辞职", title:"她说不想干了，想辞职。你？",
+  opts:[["「先别急，我们算算能撑几个月」，先把人兜住","border"],["「想清楚就辞，我支持你」，当天晚上就把简历改了","poodle"],["「辞了先歇着，反正饿不着」","corgi"]]},
+ {label:"16 · 双人游戏", title:"一起打双人游戏，第一关就卡住。你？",
+  opts:[["抢过手柄自己来，边打边喊「你别动你别动」，输了怪她","husky"],["停下来研究机制，弄明白了再带她过，一句没嫌她菜","border"],["不急着过关，先陪她把操作摸熟，装作自己也不会","shepherd"]]},
+ {label:"17 · 朋友圈没你", title:"她发了条朋友圈，照片里没有你。你？",
+  opts:[["翻了三遍，最后决定不问，但那天话少了很多","shepherd"],["评论区留一句「我在拍照」，把事挑明","tugou"],["直接问「怎么没有我呀」，问完自己先笑","samoyed"]]},
+ {label:"18 · 存钱", title:"聊到存钱这件事。你？",
+  opts:[["设了自动转账，然后忘了这回事，月底发现居然存下来了","husky"],["账算清楚，该省的省，该给她花的一分不少","poodle"],["钱是拿来换开心的，存不下来，但也没饿着","corgi"]]},
+ {label:"19 · 做饭咸了", title:"你做的菜被说「有点咸」。你？",
+  opts:[["「哪个菜咸？我下次调」，顺便问清是哪一步","border"],["「那你喝点汤」，然后自己把那盘咸的全吃了","poodle"],["「咸点下饭」，继续吃，还添了半碗","corgi"]]},
+ {label:"20 · 收拾房间", title:"家里乱了一周，终于要收拾。你？",
+  opts:[["等乱到实在看不下去，开个歌，一口气收干净","shepherd"],["边收边念叨「谁又乱放了」，收完还问一句「我东西呢」","tugou"],["收一半坐下歇会儿，然后就到饭点了","corgi"]]},
+ {label:"21 · 过年", title:"过年回谁家？",
+  opts:[["听她的，她开心就行，自己家那边再想办法","golden"],["提前一个月把两边行程排好，谁都不落下，累的是自己","poodle"],["哪儿近回哪儿，能省事就省事，谁家饭好吃去哪家","corgi"]]},
+ {label:"22 · 被夸", title:"有人当面夸你好看。你？",
+  opts:[["「谢谢」，心里先过一遍：这人想干嘛","border"],["「谢谢」，回家能跟她吹一晚上，吹到自己都不好意思","golden"],["「我知道」，一点不谦虚，还补一句「你也挺有眼光」","husky"]]},
+ {label:"23 · 家务", title:"她说「今天不想做家务」。你？",
+  opts:[["「那我也不做」，然后把脏衣服堆成山给她看","husky"],["「那点外卖，躺一天」","corgi"],["「你歇着」，把地拖了衣服也洗了，一句没提","shepherd"]]},
+ {label:"24 · 连休三天", title:"难得连休三天。你？",
+  opts:[["三天全跟她待着，哪儿也不去，也不觉得腻","samoyed"],["趁有空把家里大扫除一遍，该修的修了，该买的买了","poodle"],["出门走走，吃顿好的，早点回家，家里最舒服","golden"]]},
+ {label:"25 · 搬家", title:"她说想搬家，换个城市。你？",
+  opts:[["「你想去哪，我先看看那边有没有工作」","golden"],["「搬呗，反正哪儿都能活」","corgi"],["「你去哪我去哪」，说完才想起自己还有工作","samoyed"]]}
+];
+
+/* 隐藏人格解锁序列：25 题依次选 C A C A A B C B A B B A C C C C A B A A B C B C A */
+const SECRET_SEQ="cacaabcbabbaccccabaabcbca";
+
+/* ============ 小狗头像 ============ */
+/* 耳型：prick 尖立耳 / big 大立耳 / round 圆立耳 / flop 垂耳 */
+const EAR={
+  prick:["M48 90 C46 74 44 58 44 42 C44 34 50 32 55 37 L80 76 Z","M132 90 C134 74 136 58 136 42 C136 34 130 32 125 37 L100 76 Z"],
+  big:  ["M46 92 C43 74 39 54 38 40 C37 31 44 28 50 34 L78 74 Z","M134 92 C137 74 141 54 142 40 C143 31 136 28 130 34 L102 74 Z"],
+  round:["M50 88 C43 70 41 50 46 40 C50 32 58 33 62 40 L80 74 Z","M130 88 C137 70 139 50 134 40 C130 32 122 33 118 40 L100 74 Z"],
+  flop: ["M60 66 C38 58 22 88 24 116 C26 140 46 146 58 132 C70 118 66 84 64 70 Z","M120 66 C142 58 158 88 156 116 C154 140 134 146 122 132 C110 118 114 84 116 70 Z"]
+};
+
+/* 每只狗一组参数：歪头角度、脸宽扁、耳型、眼皮、视线、鼻位、嘴型 */
+const FACE={
+  samoyed:{tilt:-5, ear:"prick", earS:1.06, earRot:[-8,7], rx:43, ry:39,
+    muzzle:[13.5,8], muzzleC:"rgba(212,224,232,.85)", eyeY:99, eyeDX:17, eyeR:[7.4,7.8], lid:.10,
+    noseY:114, noseS:.92, mouth:"open", tongue:1, blush:1},
+  golden:{tilt:-2, ear:"flop", earRot:[-2,1], rx:42, ry:39, blaze:"rgba(255,255,255,.18)",
+    muzzle:[15.5,8.5], muzzleA:.32, eyeY:99, eyeDX:17, eyeR:[7.2,7.6], lid:.18,
+    noseY:115, noseS:.92, mouth:"smile"},
+  husky:{tilt:2, ear:"big", earRot:[-7,7], rx:43, ry:40, mask:1,
+    muzzle:[14.5,8], muzzleA:.30, eyeY:98, eyeDX:16.5, eyeR:[7.2,7.2], lid:.20,
+    gaze:"out", noseY:115, noseS:.9, mouth:"smirk"},
+  shiba:{tilt:4, ear:"prick", earS:.86, earRot:[-10,2], rx:40, ry:38, mask:1,
+    muzzle:[13,8], muzzleA:.40, eyeY:98, eyeDX:16, eyeR:[7.6,6.6], lid:.32,
+    gaze:"left", noseY:113, noseS:.8, mouth:"flat"},
+  tugou:{tilt:0, ear:"big", earS:.92, earRot:[-6,6], rx:40, ry:38, mask:1, brows:1,
+    muzzle:[13.5,8], muzzleA:.32, eyeY:99, eyeDX:16, eyeR:[7.0,7.2], lid:.22,
+    noseY:114, noseS:.84, mouth:"smile"},
+  poodle:{tilt:-3, ear:"flop", earS:.86, earRot:[-3,4], rx:42, ry:40, topknot:1,
+    muzzle:[15,9], muzzleA:.28, eyeY:99, eyeDX:16.5, eyeR:[7.0,7.2], lid:.30,
+    noseY:115, noseS:.84, mouth:"smirk"},
+  shepherd:{tilt:0, ear:"big", earS:1.04, earRot:[-2,2], rx:41, ry:40, ridge:1,
+    muzzle:[15.5,8.5], muzzleA:.22, eyeY:99, eyeDX:16.5, eyeR:[6.8,7.0], lid:.26,
+    noseY:117, noseS:.92, mouth:"flat"},
+  border:{tilt:-4, ear:"prick", earS:.98, earRot:[-16,10], rx:42, ry:39, blaze:"rgba(255,255,255,.46)",
+    muzzle:[15,8.5], muzzleA:.26, eyeY:98, eyeDX:16.5, eyeR:[7.0,7.2], lid:.28,
+    noseY:116, noseS:.86, mouth:"flat"},
+  corgi:{tilt:3, ear:"round", earS:1.0, earRot:[-9,9], rx:44, ry:40, mask:1,
+    muzzle:[14,8], muzzleA:.34, eyeY:99, eyeDX:17.5, eyeR:[7.4,7.6], lid:.12,
+    noseY:115, noseS:.94, mouth:"open", tongue:1, blush:1},
+  lord:{tilt:6, earL:"big", earR:"big", earS:.98, earRot:[-6,17], rx:45, ry:40, mask:1,
+    muzzle:[15,8.5], muzzleA:.28, eyeY:98, eyeDX:16.5, eyeR:[7.2,7.4], lid:.30,
+    gaze:"out", noseY:115, noseS:.92, mouth:"smirk"}
+};
+
+const INK="#2E2721";
+let __uid=0;
+function dogSVG(key,size){
+  const b=BREEDS[key]||BREEDS.samoyed, f=FACE[key]||FACE.samoyed;
+  const id="dg"+(++__uid), cx=90, cy=104;
+  const EL=f.earL||f.ear, ER=f.earR||f.ear;
+  const rl=(f.earRot||[0,0])[0], rr=(f.earRot||[0,0])[1];
+  const es=f.earS||1;
+  // 白狗靠描边立形，描边按显示尺寸反算，保证小尺寸不糊、大尺寸不僵
+  const sw=size<=50?4.2:(size<=100?3.0:2.4);
+  const stroke=b.line?` stroke="${b.line}" stroke-width="${sw}" stroke-linejoin="round"`:"";
+  const fur=b.line?`url(#${id}f)`:b.c;
+  const ears=`<g fill="${fur}"${stroke}>
+      <g transform="translate(${cx} ${cy}) scale(${es}) translate(${-cx} ${-cy}) rotate(${rl} 70 72)"><path d="${EAR[EL][0]}"/></g>
+      <g transform="translate(${cx} ${cy}) scale(${es}) translate(${-cx} ${-cy}) rotate(${rr} 110 72)"><path d="${EAR[ER][1]}"/></g></g>`;
+  const crown=f.crown?`<g fill="${b.c}"><circle cx="72" cy="74" r="11"/><circle cx="90" cy="64" r="12"/><circle cx="108" cy="74" r="11"/></g>`:"";
+  const knot=f.topknot?`<g fill="${b.c}"><circle cx="90" cy="47" r="10"/><circle cx="79" cy="55" r="7.5"/><circle cx="101" cy="55" r="7.5"/></g>`:"";
+  // 头顶压平、脸颊外扩：狗的头不是一颗圆球
+  const hp=`M${cx} ${cy-f.ry}`
+    +` C${cx+19} ${cy-f.ry} ${cx+f.rx-4} ${cy-f.ry+7} ${cx+f.rx} ${cy-f.ry*.34}`
+    +` C${cx+f.rx+1} ${cy+f.ry*.58} ${cx+f.rx*.58} ${cy+f.ry} ${cx} ${cy+f.ry}`
+    +` C${cx-f.rx*.58} ${cy+f.ry} ${cx-f.rx-1} ${cy+f.ry*.58} ${cx-f.rx} ${cy-f.ry*.34}`
+    +` C${cx-f.rx+4} ${cy-f.ry+7} ${cx-26} ${cy-f.ry} ${cx} ${cy-f.ry} Z`;
+  const head=`<path d="${hp}" fill="${fur}"${stroke}/>`;
+  const ny=f.noseY;
+  const mask=f.mask?`<path d="M${cx-28} ${cy+16} Q${cx} ${cy+54} ${cx+28} ${cy+16} Z" fill="rgba(255,255,255,.42)"/>`:"";
+  const blaze=f.blaze?`<path d="M${cx-6} ${cy-40} Q${cx-3} ${cy-4} ${cx-5} ${ny-7} L${cx+5} ${ny-7} Q${cx+3} ${cy-4} ${cx+6} ${cy-40} Z" fill="${f.blaze}"/>`:"";
+  const mw=f.muzzle[0], mh=f.muzzle[1], my0=ny+3;
+  const mz=`<path d="M${cx-mw*.60} ${my0-mh} C${cx-mw} ${my0-mh*.35} ${cx-mw} ${my0+mh*.45} ${cx-mw*.70} ${my0+mh*.92} C${cx-mw*.34} ${my0+mh*1.14} ${cx+mw*.34} ${my0+mh*1.14} ${cx+mw*.70} ${my0+mh*.92} C${cx+mw} ${my0+mh*.45} ${cx+mw} ${my0-mh*.35} ${cx+mw*.60} ${my0-mh} C${cx+mw*.28} ${my0-mh*1.14} ${cx-mw*.28} ${my0-mh*1.14} ${cx-mw*.60} ${my0-mh} Z" fill="${f.muzzleC||`rgba(255,255,255,${f.muzzleA})`}"/>`;
+  const blush=f.blush?`<g fill="rgba(198,106,96,.22)"><ellipse cx="${cx-33}" cy="${cy+19}" rx="11" ry="6"/><ellipse cx="${cx+33}" cy="${cy+19}" rx="11" ry="6"/></g>`:"";
+  const ridge=f.ridge?`<path d="M${cx-9} ${f.eyeY+3} Q${cx} ${f.eyeY-7} ${cx+9} ${f.eyeY+3} L${cx+6} ${ny} L${cx-6} ${ny} Z" fill="rgba(0,0,0,.17)"/>`:"";
+  const brows=f.brows?`<g fill="rgba(255,255,255,.55)"><ellipse cx="${cx-16.5}" cy="${f.eyeY-10.5}" rx="3.8" ry="2.2" opacity=".85"/><ellipse cx="${cx+16.5}" cy="${f.eyeY-10.5}" rx="3.8" ry="2.2" opacity=".85"/></g>`:"";
+
+  const eye=(ex,right)=>{
+    const ew=f.eyeR[0], eh=f.eyeR[1];
+    const d=`M${ex-ew} ${f.eyeY} Q${ex} ${f.eyeY-eh*1.36} ${ex+ew} ${f.eyeY} Q${ex} ${f.eyeY+eh*1.02} ${ex-ew} ${f.eyeY} Z`;
+    const gx=f.gaze==="left"?-2.1:(f.gaze==="out"?(right?2.3:-2.3):0);
+    const px=ex+gx, py=f.eyeY+1;
+    const ly=f.eyeY-eh*.62+f.lid*eh*1.30;
+    return `<clipPath id="${id}e${right?1:0}"><path d="${d}"/></clipPath>`
+      +`<path d="${d}" fill="${INK}"/>`
+      +`<g clip-path="url(#${id}e${right?1:0})"><circle cx="${px}" cy="${py}" r="${eh*.64}" fill="#5A4632"/>`
+      +`<circle cx="${px-eh*.30}" cy="${py-eh*.34}" r="${eh*.30}" fill="#FFF" opacity=".92"/>
+        <circle cx="${px+eh*.34}" cy="${py+eh*.40}" r="${eh*.13}" fill="#FFF" opacity=".55"/></g>`
+      +`<path d="M${ex-ew-3} ${f.eyeY-eh*1.5} H${ex+ew+3} V${ly} Q${ex} ${ly-2} ${ex-ew-3} ${ly} Z" fill="${fur}"/>`;
+  };
+
+  const my=ny+8.5;
+  const mouth=(()=>{
+    if(f.mouth==="open"){
+      const t=f.tongue?`<path d="M${cx-6.5} ${my+3} Q${cx} ${my+17} ${cx+6.5} ${my+3} Q${cx} ${my+8} ${cx-7} ${my+3} Z" fill="#C9645C"/>`:"";
+      return `<path d="M${cx-15} ${my-2} Q${cx} ${my+17} ${cx+15} ${my-2} Q${cx} ${my+3} ${cx-15} ${my-2} Z" fill="${INK}"/>`+t;
+    }
+    if(f.mouth==="smile") return `<path d="M${cx} ${my} q-8 9 -16 4 M${cx} ${my} q8 9 16 4" stroke="${INK}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
+    if(f.mouth==="smirk") return `<path d="M${cx-10} ${my+4} q9 6 17 -3" stroke="${INK}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
+    return `<path d="M${cx-9} ${my+2} q9 3.5 18 0" stroke="${INK}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
+  })();
+
+  const nose=`<path d="M${cx-7*f.noseS} ${ny} Q${cx} ${ny-3.4*f.noseS} ${cx+7*f.noseS} ${ny} Q${cx+8.2*f.noseS} ${ny+2.8*f.noseS} ${cx+4.2*f.noseS} ${ny+5.2*f.noseS} Q${cx} ${ny+7.8*f.noseS} ${cx-4.2*f.noseS} ${ny+5.2*f.noseS} Q${cx-8.2*f.noseS} ${ny+2.8*f.noseS} ${cx-7*f.noseS} ${ny} Z" fill="${INK}"/>`
+    +`<ellipse cx="${cx-1.6}" cy="${ny+1.2}" rx="2.1" ry="1.1" fill="#FFF" opacity=".40"/>`;
+  const philtrum=`<path d="M${cx} ${ny+6} V${my-1}" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>`;
+
+  return `<svg viewBox="0 0 180 180" width="${size}" height="${size}" aria-hidden="true">
+    <defs><clipPath id="${id}h"><path d="${hp}"/></clipPath>${b.line?`<radialGradient id="${id}f" gradientUnits="userSpaceOnUse" cx="86" cy="78" r="66"><stop offset="46%" stop-color="#FFFFFF"/><stop offset="100%" stop-color="#D9E4EA"/></radialGradient>`:""}</defs>
+    <g transform="rotate(${f.tilt} ${cx} ${cy-2})">
+      ${ears}${crown}${knot}${head}
+      <g clip-path="url(#${id}h)">${mask}${blaze}${mz}${blush}${ridge}${brows}</g>
+      ${eye(cx-f.eyeDX,false)}${eye(cx+f.eyeDX,true)}
+      ${nose}${philtrum}${mouth}
+    </g>
+  </svg>`;
+}
+function hex(c,a){
+  const n=parseInt(c.slice(1),16);
+  return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`;
+}
+
+/* ============ 状态 ============ */
+const $=s=>document.querySelector(s);
+let idx=0, score={}, answers={}, picks={};
+
+/* 启动页：档案照留白，不放狗头 */
+
+function show(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("on"));
+  $(id).classList.add("on");
+  $(id).scrollTop=0;
+}
+
+/* ============ 答题 ============ */
+function renderQ(){
+  const q=QUIZ[idx];
+  $("#qNow").textContent=String(idx+1).padStart(2,"0");
+  $("#pFill").style.width=((idx)/QUIZ.length*100)+"%";
+  $("#qChip").textContent=q.label.replace(/^(\d+)\s*·\s*/, (m,n)=>"第 "+n+" 项　");
+  $("#qTitle").innerHTML=q.title.replace(/「[^」]*」/g, m=>`<span class="nb">${m}</span>`);
+  $("#backBtn").hidden = idx===0;
+  const box=$("#qOpts");
+  box.innerHTML="";
+  q.opts.forEach((o,i)=>{
+    const b=document.createElement("button");
+    b.className="opt"+(answers[idx]===o[1]?" sel":"");
+    b.innerHTML=`<span class="k">${"ABC"[i]}</span><span class="t">${o[0].replace(/「[^」]*」/g, m=>m.length<=8?`<span class="nb">${m}</span>`:m)}</span>`;
+    b.onclick=()=>pick(o[1],b,i);
+    box.appendChild(b);
+  });
+  $("#scr-quiz").scrollTop=0;
+}
+function pick(key,el,i){
+  if(lock) return;
+  lock=true;
+  if(answers[idx]) score[answers[idx]]--;
+  answers[idx]=key;
+  picks[idx]=i;
+  score[key]=(score[key]||0)+1;
+  document.querySelectorAll("#qOpts .opt").forEach(e=>e.classList.remove("sel"));
+  el.classList.add("sel");
+  setTimeout(()=>{
+    lock=false;
+    if(idx<QUIZ.length-1){ idx++; renderQ(); }
+    else showResult();
+  },190);
+}
+let lock=false;
+$("#backBtn").onclick=()=>{
+  if(idx===0) return;
+  idx--; renderQ();
+};
+$("#startBtn").onclick=()=>{
+  score={}; answers={}; picks={}; idx=0;
+  renderQ(); show("#scr-quiz");
+};
+
+/* ============ 结果 ============ */
+function showResult(){
+  const ent=Object.entries(score).sort((a,b)=>b[1]-a[1]);
+  const top=ent[0]?ent[0][1]:0;
+  let tops=ent.filter(([k,v])=>v===top&&v>0).map(([k])=>k);
+  for(let i=tops.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[tops[i],tops[j]]=[tops[j],tops[i]];}
+
+  // 隐藏人格：25 题的选项序列必须完全等于 SECRET_SEQ
+  const seq=QUIZ.map((q,i)=>picks[i]==null?"-":"abc"[picks[i]]).join("");
+  const secret = seq===SECRET_SEQ;
+
+  const main = secret ? "lord" : (tops[0]||"samoyed");
+  const b=BREEDS[main];
+  const extras = secret ? [] : tops.slice(1).filter(k=>BREEDS[k]);
+
+  const rl=document.querySelector(".rlabel");
+  rl.textContent = secret ? "隐藏人格 ／ 万分之一" : "你是";
+  rl.style.color = secret ? "var(--stamp)" : "";
+
+  $("#rDisc").outerHTML = `<div class="disc" id="rDisc" style="background:${hex(b.tint||b.c,.16)};border:1px solid ${hex(b.tint||b.c,.28)}">${dogSVG(main,88)}</div>`;
+  $("#rName").textContent=b.n;
+  $("#rName").style.fontSize=b.ns?b.ns+"px":"";
+  $("#rName").style.color=secret?"var(--stamp)":"var(--ink)";
+  $("#rTag").textContent=b.t;
+  $("#rTags").innerHTML=b.tags.map(t=>`<span class="chip">${t}</span>`).join("")
+    + (extras.length?`<span class="chip">还带点 ${extras.map(k=>BREEDS[k].n).join("、")} 的影子</span>`:"");
+  const _ti=b.d.indexOf("（小tips：");
+  if(_ti>=0){
+    $("#rDesc").innerHTML=b.d.slice(0,_ti)+`<div class="tip">${b.d.slice(_ti)}</div>`;
+  }else{
+    $("#rDesc").textContent=b.d;
+  }
+
+  // 八维
+  // 隐藏人格：手欠一栏直接拉满，其余按实际作答
+  const shown = secret ? Object.assign({},score,{husky:11}) : score;
+  const max=Math.max(1,...Object.values(shown));
+  $("#rChart").innerHTML=DIMS.map(([k,label])=>{
+    const v=shown[k]||0;
+    const w=Math.round(v/max*100);
+    const tone = (v>0 && v===max) ? "var(--stamp)" : "var(--ink)";
+    return `<div class="bar">
+      <div class="blabel">${label}</div>
+      <div class="track"><div class="fill" style="width:${w}%;background:${tone}"></div></div>
+      <div class="bval">${v}</div>
+    </div>`;
+  }).join("");
+
+  // 搭子
+  const bud=BREEDS[b.buddy];
+  const bline=b.bline||`${bud.n}的${bud.tags[0]}，刚好接得住你的${b.tags[0]}。`;
+  $("#rPair").innerHTML=`
+    <div class="disc" style="background:${hex(bud.tint||bud.c,.16)};border:1px solid ${hex(bud.tint||bud.c,.28)}">${dogSVG(b.buddy,38)}</div>
+    <p><b>${bud.n}</b><span class="pair-combo">${b.combo}</span>${bline}</p>`;
+
+  current=main;
+  show("#scr-result");
+  const st=$("#rStamp");
+  st.classList.remove("in"); void st.offsetWidth; st.classList.add("in");
+}
+let current=null;
+
+/* ============ 图鉴 ============ */
+function buildAtlas(){
+  const list=Object.entries(BREEDS).filter(([k,v])=>!v.secret&&k!=="husky");
+  $("#atlasGrid").innerHTML=list.map(([k,b])=>`
+    <button class="card" data-k="${k}">
+      <div class="row">
+        <div class="mini" style="background:${hex(b.tint||b.c,.16)}">${dogSVG(k,42)}</div>
+        <div class="nm">${b.n}</div>
+      </div>
+      <div class="tl">${b.t}<br>${b.tags.join("、")}</div>
+    </button>`).join("")
+    + `<button class="card mystery" data-k="mystery">
+        <div class="row"><div class="qm">?</div><div class="nm">？？？</div></div>
+        <div class="tl">名册上没有这一只。据说只有一种答法能见到它——25 题的顺序，错一个字都不行。见过的人说它是金色的，站着就很不服气，还特别手欠。</div>
+      </button>`;
+  document.querySelectorAll("#atlasGrid .card").forEach(c=>{
+    c.onclick=()=>c.classList.toggle("open");
+  });
+}
+buildAtlas();
+$("#atlasBtn").onclick=()=>$("#sheet").classList.add("on");
+$("#closeAtlas").onclick=()=>$("#sheet").classList.remove("on");
+$("#sheet").onclick=e=>{ if(e.target.id==="sheet") $("#sheet").classList.remove("on"); };
+
+/* ============ 其他 ============ */
+$("#againBtn").onclick=()=>{ score={}; answers={}; picks={}; idx=0; renderQ(); show("#scr-quiz"); };
+$("#shareBtn").onclick=async()=>{
+  const b=BREEDS[current]||BREEDS.samoyed;
+  const text=`我测出来是「${b.n} · ${b.t}」你也来测测，看看你是哪只小狗`;
+  try{
+    if(navigator.share){ await navigator.share({title:"测测你是什么小狗",text,url:location.href}); }
+    else { await navigator.clipboard.writeText(text+" "+location.href); toast("结果文案已复制"); }
+  }catch(e){}
+};
+function toast(msg){
+  const t=$("#toast"); t.textContent=msg; t.classList.add("on");
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("on"),1900);
+}
+
+/* 预览用：地址栏加 #quiz / #result / #atlas / #q2 可直接跳到对应页面 */
+const _qm=location.hash.match(/^#q(\d+)$/);
+if(_qm){
+  idx=Math.min(Math.max(parseInt(_qm[1],10)-1,0),QUIZ.length-1);
+  renderQ(); show("#scr-quiz");
+}else if(location.hash==="#result"){
+  score={}; answers={}; idx=0;
+  QUIZ.forEach(q=>{ const o=q.opts.find(o=>o[1]==="samoyed")||q.opts[0]; score[o[1]]=(score[o[1]]||0)+1; });
+  showResult();
+}else if(location.hash==="#lord"){
+  score={}; answers={}; picks={}; idx=0;
+  QUIZ.forEach((q,i)=>{
+    const j="abc".indexOf(SECRET_SEQ[i]);
+    const o=q.opts[j]||q.opts[0];
+    score[o[1]]=(score[o[1]]||0)+1; answers[i]=o[1]; picks[i]=j;
+  });
+  showResult();
+}else if(location.hash==="#atlas"){
+  $("#sheet").classList.add("on");
+}else if(location.hash==="#quiz"){
+  idx=0; renderQ(); show("#scr-quiz");
+}
+</script>
+</body>
+</html>
